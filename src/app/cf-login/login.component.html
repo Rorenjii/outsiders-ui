@@ -1,5 +1,8 @@
 <div class="container">
     <div *ngIf="loggedIn">
+        <div>
+            Welcome, {{ userName }}! 
+        </div>
         <button (click)="logOut()">
             Log Out
         </button>

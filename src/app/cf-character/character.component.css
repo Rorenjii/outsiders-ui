@@ -1,0 +1,13 @@
+button.buttonOne {
+    padding: 5px;
+    margin: 5px;
+    background-color: blue;
+    color: white;
+}
+
+div.container {
+    padding: 5px;
+    height: 100%;
+    background-color: lightblue;
+    color: black;
+}

@@ -8,6 +8,7 @@ export class UserService {
 
     user$ : BehaviorSubject<any> = new BehaviorSubject(null);
     user : any;
+    error : any;
 
     constructor(private _http: HttpClient) { }
 
@@ -17,28 +18,24 @@ export class UserService {
     }
 
     logIn(credentials: any): void {
-        let url = BACKEND_URL + 'api/login';
+        let url = BACKEND_URL + 'api/auth/login';
         this._http.post(url, credentials).subscribe(x => {
-            let id = <number> x;
-            if (id > -1) {
-                this.getUser(id);
+            let summary = <string> x["summary"];
+            if (summary === "Password did not match!" || summary === "User not found by that Email" ) {
+                this.error = "username or password not correct";
+            } else {
+                this.getUser(summary);
             }
+        }, y => {
+            console.log(y);
         })
     }
 
     logOut(): void {
-        let url = BACKEND_URL + 'api/logout';
-        let request = {
-            'id': this.user.id
-        }
-        this._http.post(url, request).subscribe(x => {
-            if (x) {
-                this.setUser(null);
-            }
-        })
+        this.setUser(null);
     }
 
-    getUser(id : number): any {
+    getUser(id : string): any {
         let url = BACKEND_URL + 'api/user/' + id;
         this._http.get(url).subscribe(x => {
             this.setUser(x);

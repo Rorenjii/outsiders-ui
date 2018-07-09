@@ -8,26 +8,8 @@ import { UserService } from '../cf-user/user.service';
   templateUrl: './nav.component.html',
   styleUrls: ['./nav.component.css']
 })
-export class NavigationComponent implements AfterContentInit {
-
-  loggedIn = false;
-  user;
-  summary;
+export class NavigationComponent {
 
   constructor(private _http: HttpClient, private _userService: UserService) {
-  }
-
-  ngAfterContentInit() {
-    this._userService.user$.subscribe(x => {
-      if (x) {
-      this.user = x;
-      this.loggedIn = true;
-      this.summary = this.user.displayName + ' is logged in!';
-      } else {
-        this.loggedIn = false;
-        this.user = null;
-        this.summary = '';
-      }
-    })
   }
 }
