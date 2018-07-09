@@ -79,7 +79,7 @@ module.exports = "div.bodyParent {\r\n    background-color: lightgreen;\r\n    h
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"bodyParent\">\r\n  <cf-nav>\r\n\r\n  </cf-nav>\r\n  <cf-chat>\r\n    \r\n  </cf-chat>\r\n  <router-outlet>\r\n    \r\n  </router-outlet>\r\n</div>\r\n"
+module.exports = "<div class=\"bodyParent\">\r\n  <cf-nav>\r\n\r\n  </cf-nav>\r\n  <router-outlet>\r\n    \r\n  </router-outlet>\r\n</div>\r\n"
 
 /***/ }),
 
