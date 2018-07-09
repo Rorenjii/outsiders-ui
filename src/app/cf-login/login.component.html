@@ -1,0 +1,19 @@
+<div class="container">
+    <div *ngIf="loggedIn">
+        <button (click)="logOut()">
+            Log Out
+        </button>
+    </div>
+    <div *ngIf="!loggedIn">
+        <div>
+            <label>Email Address</label>
+            <input [(ngModel)] = "email">
+        <br>
+            <label>Password</label>
+            <input [(ngModel)] = "password" type=password>
+        </div>
+        <button (click)="logIn()">
+            Log In
+        </button>
+    </div>
+</div>
