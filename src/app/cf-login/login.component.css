@@ -1,0 +1,15 @@
+button.buttonOne {
+    padding: 5px;
+    margin: 5px;
+    background-color: rgb(212, 250, 203);
+    color: black;
+    border-color: black;
+    border-radius: 4px;
+}
+
+div.container {
+    padding: 5px;
+    height: 100%;
+    background-color: royalblue;
+    color: black;
+}
