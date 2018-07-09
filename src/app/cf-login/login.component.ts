@@ -15,6 +15,8 @@ export class LoginComponent implements OnInit {
   email : string = '';
   password : string = '';
 
+  userName : string;
+
   loggedIn = false;
 
   constructor(private _http: HttpClient, private _userService: UserService) {
@@ -24,8 +26,10 @@ export class LoginComponent implements OnInit {
     this._userService.user$.subscribe(x => {
       if (x !== null) {
         this.loggedIn = true;
+        this.userName = x.name || x.email;
       } else {
         this.loggedIn = false;
+        this.userName = undefined;
       }
     })
   }

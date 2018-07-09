@@ -3,30 +3,15 @@
         Home
     </button>
 
-    <button class="buttonOne" routerLink="/arena" >
-        Battle
-    </button>
-
-    <button class="buttonOne" routerLink="/team">
-        Team
+    <button class="buttonOne" routerLink="/character" >
+        Character
     </button>
 
     <button class="buttonOne" routerLink="/user">
         User
     </button>
 
-    <div style="float:right; width:50%">
-        <span style="float:left">
-            {{summary}}
-        </span>
-
-        <button class="buttonOne" routerLink="/login" style="float:right">
-            <span *ngIf="!loggedIn">
-            Log In
-            </span>
-            <span *ngIf="loggedIn">
-            Log Out
-            </span>
-        </button>
-    </div>
+    <cf-login>
+        
+    </cf-login>
 </div>
