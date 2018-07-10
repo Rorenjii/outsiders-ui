@@ -17,6 +17,13 @@ export class UserService {
         this.user = user;
     }
 
+    getUser(id : string): any {
+        let url = BACKEND_URL + 'api/user/' + id;
+        this._http.get(url).subscribe(x => {
+            this.setUser(x);
+        });
+    }
+
     logIn(credentials: any): void {
         let url = BACKEND_URL + 'api/auth/login';
         this._http.post(url, credentials).subscribe(x => {
@@ -35,10 +42,16 @@ export class UserService {
         this.setUser(null);
     }
 
-    getUser(id : string): any {
-        let url = BACKEND_URL + 'api/user/' + id;
-        this._http.get(url).subscribe(x => {
-            this.setUser(x);
+    register(req) {
+        let url = BACKEND_URL + 'api/register/'
+        this._http.post(url, req).subscribe(x => {
+            
+        },
+        y => {
+            this.error = y;
+        },
+        () => {
+            this.error = "Success!";
         });
     }
 }

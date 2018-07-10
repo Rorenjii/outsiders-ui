@@ -14,6 +14,7 @@ import { HomeComponent } from './cf-home/home.component';
 import { LoginComponent } from './cf-login/login.component';
 import { UserService } from './cf-user/user.service';
 import { CharacterService } from './cf-character/character.service';
+import { CommonModule } from '@angular/common';
 
 const routes = [
   { path: '', component: HomeComponent },
@@ -37,6 +38,7 @@ const routes = [
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
+    CommonModule,
     RouterModule.forRoot(routes)
   ],
   providers: [
