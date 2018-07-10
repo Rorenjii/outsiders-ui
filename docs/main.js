@@ -142,12 +142,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _cf_login_login_component__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./cf-login/login.component */ "./src/app/cf-login/login.component.ts");
 /* harmony import */ var _cf_user_user_service__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./cf-user/user.service */ "./src/app/cf-user/user.service.ts");
 /* harmony import */ var _cf_character_character_service__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./cf-character/character.service */ "./src/app/cf-character/character.service.ts");
+/* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! @angular/common */ "./node_modules/@angular/common/fesm5/common.js");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+
 
 
 
@@ -186,6 +188,7 @@ var AppModule = /** @class */ (function () {
                 _app_routing_module__WEBPACK_IMPORTED_MODULE_9__["AppRoutingModule"],
                 _angular_common_http__WEBPACK_IMPORTED_MODULE_3__["HttpClientModule"],
                 _angular_forms__WEBPACK_IMPORTED_MODULE_4__["FormsModule"],
+                _angular_common__WEBPACK_IMPORTED_MODULE_14__["CommonModule"],
                 _angular_router__WEBPACK_IMPORTED_MODULE_2__["RouterModule"].forRoot(routes)
             ],
             providers: [
@@ -220,7 +223,7 @@ module.exports = "button.buttonOne {\r\n    padding: 5px;\r\n    margin: 5px;\r\
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"container\">\r\n  Character Component\r\n</div>"
+module.exports = "<div class=\"container\">\r\n  Character Component\r\n\r\n  <div>\r\n    {{ summary }}\r\n  </div>\r\n\r\n  <div>\r\n    <div *ngFor=\"let c of characters\">\r\n      <button (click)=\"loadCharacter(c.id)\">\r\n      {{ c.characterDescription.name }}\r\n      </button>\r\n    </div>\r\n  </div>\r\n\r\n  <div>\r\n    {{ character }}\r\n  </div>\r\n</div>"
 
 /***/ }),
 
@@ -235,23 +238,59 @@ module.exports = "<div class=\"container\">\r\n  Character Component\r\n</div>"
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CharacterComponent", function() { return CharacterComponent; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _character_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./character.service */ "./src/app/cf-character/character.service.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
 
 var CharacterComponent = /** @class */ (function () {
-    function CharacterComponent() {
+    function CharacterComponent(_characterService) {
+        this._characterService = _characterService;
         this.title = 'PCM - Character';
+        this.names = [];
+        this.ids = [];
     }
+    CharacterComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        this._characterService.characters$.subscribe(function (x) {
+            if (x !== null) {
+                if (x.length !== 0) {
+                    _this.characters = x;
+                    _this.summary = "Fetched all characters";
+                }
+                else {
+                    _this.summary = "No characters found, try logging in";
+                }
+            }
+            else {
+                _this.character = null;
+                _this.characters = null;
+            }
+        });
+    };
+    CharacterComponent.prototype.loadCharacter = function (id) {
+        var _this = this;
+        this._characterService.getCharacter(id);
+        this._characterService.character$.subscribe(function (x) {
+            if (x !== null) {
+                _this.character = x;
+            }
+        });
+    };
     CharacterComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
             selector: 'cf-character',
             template: __webpack_require__(/*! ./character.component.html */ "./src/app/cf-character/character.component.html"),
             styles: [__webpack_require__(/*! ./character.component.css */ "./src/app/cf-character/character.component.css")]
-        })
+        }),
+        __metadata("design:paramtypes", [_character_service__WEBPACK_IMPORTED_MODULE_1__["CharacterService"]])
     ], CharacterComponent);
     return CharacterComponent;
 }());
@@ -271,18 +310,55 @@ var CharacterComponent = /** @class */ (function () {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CharacterService", function() { return CharacterService; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
+/* harmony import */ var _shared_const__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../shared/const */ "./src/app/shared/const.ts");
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
 
 var CharacterService = /** @class */ (function () {
-    function CharacterService() {
+    function CharacterService(_http) {
+        this._http = _http;
+        this.character$ = new rxjs__WEBPACK_IMPORTED_MODULE_1__["BehaviorSubject"](null);
+        this.characters$ = new rxjs__WEBPACK_IMPORTED_MODULE_1__["BehaviorSubject"](null);
     }
+    CharacterService.prototype.setCharacter = function (character) {
+        this.character$.next(character);
+        this.character = character;
+    };
+    CharacterService.prototype.setCharacters = function (characters) {
+        this.characters$.next(characters);
+        this.characters = characters;
+    };
+    CharacterService.prototype.getCharacter = function (id) {
+        var _this = this;
+        var url = _shared_const__WEBPACK_IMPORTED_MODULE_2__["BACKEND_URL"] + 'api/character/' + id;
+        this._http.get(url).subscribe(function (x) {
+            _this.setCharacter(x["characters"][0]);
+        });
+    };
+    CharacterService.prototype.getAllCharactersForUser = function (userId) {
+        var _this = this;
+        var url = _shared_const__WEBPACK_IMPORTED_MODULE_2__["BACKEND_URL"] + 'api/character/user/' + userId;
+        this._http.get(url).subscribe(function (x) {
+            if (x !== null) {
+                _this.setCharacters(x["characters"]);
+            }
+        });
+    };
     CharacterService = __decorate([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Injectable"])()
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Injectable"])(),
+        __metadata("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_3__["HttpClient"]])
     ], CharacterService);
     return CharacterService;
 }());
@@ -367,7 +443,7 @@ module.exports = "button.buttonOne {\r\n    padding: 5px;\r\n    margin: 5px;\r\
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"container\">\r\n    <div *ngIf=\"loggedIn\">\r\n        <div>\r\n            Welcome, {{ userName }}! \r\n        </div>\r\n        <button (click)=\"logOut()\">\r\n            Log Out\r\n        </button>\r\n    </div>\r\n    <div *ngIf=\"!loggedIn\">\r\n        <div>\r\n            <label>Email Address</label>\r\n            <input [(ngModel)] = \"email\">\r\n        <br>\r\n            <label>Password</label>\r\n            <input [(ngModel)] = \"password\" type=password>\r\n        </div>\r\n        <button (click)=\"logIn()\">\r\n            Log In\r\n        </button>\r\n    </div>\r\n</div>"
+module.exports = "<div class=\"container\">\r\n    <div *ngIf=\"loggedIn\">\r\n        <div>\r\n            Welcome, {{ userName }}! \r\n        </div>\r\n        <button (click)=\"logOut()\">\r\n            Log Out\r\n        </button>\r\n    </div>\r\n    <div *ngIf=\"!loggedIn\">\r\n        <div>\r\n            <label>Email Address</label>\r\n            <input [(ngModel)] = \"email\">\r\n        <br>\r\n            <label>Password</label>\r\n            <input [(ngModel)] = \"password\" type=password>\r\n        </div>\r\n        <button (click)=\"logIn()\">\r\n            Log In\r\n        </button>\r\n        <button (click)=\"signUp()\">\r\n                Sign Up\r\n        </button>\r\n    </div>\r\n</div>"
 
 /***/ }),
 
@@ -384,6 +460,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
 /* harmony import */ var _cf_user_user_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../cf-user/user.service */ "./src/app/cf-user/user.service.ts");
+/* harmony import */ var _cf_character_character_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../cf-character/character.service */ "./src/app/cf-character/character.service.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -396,10 +473,12 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 
+
 var LoginComponent = /** @class */ (function () {
-    function LoginComponent(_http, _userService) {
+    function LoginComponent(_http, _userService, _characterService) {
         this._http = _http;
         this._userService = _userService;
+        this._characterService = _characterService;
         this.email = '';
         this.password = '';
         this.loggedIn = false;
@@ -410,10 +489,14 @@ var LoginComponent = /** @class */ (function () {
             if (x !== null) {
                 _this.loggedIn = true;
                 _this.userName = x.name || x.email;
+                console.log(x);
+                _this._characterService.getAllCharactersForUser(x.id);
             }
             else {
                 _this.loggedIn = false;
                 _this.userName = undefined;
+                _this._characterService.setCharacter(null);
+                _this._characterService.setCharacters(null);
             }
         });
     };
@@ -430,13 +513,22 @@ var LoginComponent = /** @class */ (function () {
         this.password = '';
         //clear input fields
     };
+    LoginComponent.prototype.signUp = function () {
+        var req = {
+            'email': this.email,
+            'password': this.password
+        };
+        this._userService.register(req);
+        this.email = '';
+        this.password = '';
+    };
     LoginComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
             selector: 'cf-login',
             template: __webpack_require__(/*! ./login.component.html */ "./src/app/cf-login/login.component.html"),
             styles: [__webpack_require__(/*! ./login.component.css */ "./src/app/cf-login/login.component.css")]
         }),
-        __metadata("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpClient"], _cf_user_user_service__WEBPACK_IMPORTED_MODULE_2__["UserService"]])
+        __metadata("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpClient"], _cf_user_user_service__WEBPACK_IMPORTED_MODULE_2__["UserService"], _cf_character_character_service__WEBPACK_IMPORTED_MODULE_3__["CharacterService"]])
     ], LoginComponent);
     return LoginComponent;
 }());
@@ -530,7 +622,7 @@ module.exports = "button.buttonOne {\r\n    padding: 5px;\r\n    margin: 5px;\r\
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"container\">\r\n  User Component\r\n</div>"
+module.exports = "<div class=\"container\">\r\n  User Component\r\n  <div>\r\n    {{ user }}\r\n  </div>\r\n  <div>\r\n    {{ summary }}\r\n  </div>\r\n</div>"
 
 /***/ }),
 
@@ -545,23 +637,44 @@ module.exports = "<div class=\"container\">\r\n  User Component\r\n</div>"
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UserComponent", function() { return UserComponent; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _user_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./user.service */ "./src/app/cf-user/user.service.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
 
 var UserComponent = /** @class */ (function () {
-    function UserComponent() {
+    function UserComponent(_userService) {
+        this._userService = _userService;
         this.title = 'Crystal Fantasy';
+        this.user = null;
+        this.summary = null;
     }
+    UserComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        this._userService.user$.subscribe(function (x) {
+            if (x !== null) {
+                _this.user = x;
+                _this.summary = _this.user.name + " is currently logged in.";
+            }
+            else {
+                _this.summary = "Not logged in...";
+            }
+        });
+    };
     UserComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
             selector: 'cf-user',
             template: __webpack_require__(/*! ./user.component.html */ "./src/app/cf-user/user.component.html"),
             styles: [__webpack_require__(/*! ./user.component.css */ "./src/app/cf-user/user.component.css")]
-        })
+        }),
+        __metadata("design:paramtypes", [_user_service__WEBPACK_IMPORTED_MODULE_1__["UserService"]])
     ], UserComponent);
     return UserComponent;
 }());
@@ -606,6 +719,13 @@ var UserService = /** @class */ (function () {
         this.user$.next(user);
         this.user = user;
     };
+    UserService.prototype.getUser = function (id) {
+        var _this = this;
+        var url = _shared_const__WEBPACK_IMPORTED_MODULE_2__["BACKEND_URL"] + 'api/user/' + id;
+        this._http.get(url).subscribe(function (x) {
+            _this.setUser(x);
+        });
+    };
     UserService.prototype.logIn = function (credentials) {
         var _this = this;
         var url = _shared_const__WEBPACK_IMPORTED_MODULE_2__["BACKEND_URL"] + 'api/auth/login';
@@ -624,11 +744,14 @@ var UserService = /** @class */ (function () {
     UserService.prototype.logOut = function () {
         this.setUser(null);
     };
-    UserService.prototype.getUser = function (id) {
+    UserService.prototype.register = function (req) {
         var _this = this;
-        var url = _shared_const__WEBPACK_IMPORTED_MODULE_2__["BACKEND_URL"] + 'api/user/' + id;
-        this._http.get(url).subscribe(function (x) {
-            _this.setUser(x);
+        var url = _shared_const__WEBPACK_IMPORTED_MODULE_2__["BACKEND_URL"] + 'api/register/';
+        this._http.post(url, req).subscribe(function (x) {
+        }, function (y) {
+            _this.error = y;
+        }, function () {
+            _this.error = "Success!";
         });
     };
     UserService = __decorate([

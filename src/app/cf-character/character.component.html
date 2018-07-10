@@ -1,3 +1,19 @@
 <div class="container">
   Character Component
+
+  <div>
+    {{ summary }}
+  </div>
+
+  <div>
+    <div *ngFor="let c of characters">
+      <button (click)="loadCharacter(c.id)">
+      {{ c.characterDescription.name }}
+      </button>
+    </div>
+  </div>
+
+  <div>
+    {{ character }}
+  </div>
 </div>
